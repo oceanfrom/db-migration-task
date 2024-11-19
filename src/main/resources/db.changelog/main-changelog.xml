@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+
+    <changeSet id="1" author="TUTSK" context="example-context">
+      <sqlFile path="db.changelog/versions/0001-init.sql" relativeToChangelogFile="false"/>
+    </changeSet>
+
+    <changeSet id="2" author="TUTSK" context="example-context">
+        <sqlFile path="db.changelog/versions/0002-insert.sql" relativeToChangelogFile="false"/>
+    </changeSet>
+
+    <changeSet id="3" author="TUTSK" context="example-context">
+        <sqlFile path="db.changelog/versions/0003-test-rollback.sql" relativeToChangelogFile="false"/>
+    </changeSet>
+
+
+</databaseChangeLog>
