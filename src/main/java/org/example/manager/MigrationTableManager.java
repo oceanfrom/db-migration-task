@@ -13,9 +13,9 @@ import java.sql.Statement;
 public class MigrationTableManager {
     private final ConnectionUtils connectionUtils;
 
-    public void createQueryIfNotExist() {
+    public void createTablesIfNotExist() {
         try {
-            String createTablesQuery = MigrationFileReader.readSqlFile("src/main/resources/db.changelog/sql/create_tables.sql");
+            String createTablesQuery = MigrationFileReader.readSqlFile("src/main/resources/sql/create_tables.sql");
 
             try(Connection connection = connectionUtils.getConnection()) {
                 Statement statement = connection.createStatement();
