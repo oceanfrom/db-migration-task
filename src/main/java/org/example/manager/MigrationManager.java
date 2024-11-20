@@ -9,6 +9,7 @@ public class MigrationManager {
     private final MigrationTableManager migrationTableManager;
     private final AppliedMigrationManager appliedMigrationManager;
     private final MigrationHistoryManager migrationHistoryManager;
+    private final MigrationLockManager migrationLockManager;
 
     public void createTablesIfNotExist() {
         migrationTableManager.createTablesIfNotExist();
@@ -24,5 +25,13 @@ public class MigrationManager {
 
     public boolean isMigrationApplied(File migrationFile) {
         return appliedMigrationManager.isMigrationApplied(migrationFile);
+    }
+
+    public boolean acquireLock() {
+        return migrationLockManager.acquireLock();
+    }
+
+    public void releaseLock() {
+        migrationLockManager.releaseLock();
     }
 }

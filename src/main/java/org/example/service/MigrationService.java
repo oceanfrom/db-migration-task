@@ -20,6 +20,11 @@ public class MigrationService {
     public void runMigrations(){
         migrationManager.createTablesIfNotExist();
 
+        if (!migrationManager.acquireLock()) {
+            MigrationLogger.logInfo("Migrations are already being performed in another process");
+            return;
+        }
+
         List<File> successfullyAppliedMigrations = new ArrayList<>();
 
         try(Connection connection = connectionUtils.getConnection()) {
@@ -61,6 +66,8 @@ public class MigrationService {
             }
         } catch (Exception e) {
             MigrationLogger.logError("Error when performing migrations", e);
+        } finally {
+            migrationManager.releaseLock();
         }
     }
 }

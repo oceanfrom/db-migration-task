@@ -1,10 +1,7 @@
 package org.example;
 
 import lombok.RequiredArgsConstructor;
-import org.example.manager.AppliedMigrationManager;
-import org.example.manager.MigrationHistoryManager;
-import org.example.manager.MigrationManager;
-import org.example.manager.MigrationTableManager;
+import org.example.manager.*;
 import org.example.service.MigrationService;
 import org.example.utils.ConnectionUtils;
 
@@ -21,7 +18,8 @@ public class MigrationTool {
         AppliedMigrationManager appliedMigrationManager = new AppliedMigrationManager(connectionUtils);
         MigrationHistoryManager migrationHistoryManager = new MigrationHistoryManager(connectionUtils);
         MigrationTableManager migrationTableManager = new MigrationTableManager(connectionUtils);
-        MigrationManager migrationManager = new MigrationManager(migrationTableManager, appliedMigrationManager, migrationHistoryManager);
+        MigrationLockManager migrationLockManager = new MigrationLockManager(connectionUtils);
+        MigrationManager migrationManager = new MigrationManager(migrationTableManager, appliedMigrationManager, migrationHistoryManager, migrationLockManager);
         MigrationService migrationService = new MigrationService(migrationManager, connectionUtils);
         MigrationTool tool = new MigrationTool(migrationService);
 
