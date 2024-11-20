@@ -1,10 +1,10 @@
-package org.example;
+package org.example.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class ConnectionManager {
+public class ConnectionUtils {
 
     public Connection getConnection() throws SQLException {
         String url = PropertiesUtils.getDbUrl();
