@@ -6,6 +6,7 @@ import org.example.manager.*;
 import org.example.service.MigrationRollbackService;
 import org.example.service.MigrationService;
 import org.example.utils.ConnectionUtils;
+import org.example.utils.MigrationStatus;
 
 @RequiredArgsConstructor
 public class MigrationTool {
@@ -40,9 +41,10 @@ public class MigrationTool {
         MigrationService migrationService = new MigrationService(migrationManager, connectionUtils);
         MigrationRollbackService migrationRollbackService1 = new MigrationRollbackService(connectionUtils, migrationLogger, appliedMigrationManager, migrationLockManager);
         MigrationTool tool = new MigrationTool(migrationService, migrationRollbackService1);
+        MigrationStatus status = new MigrationStatus(migrationLockManager);
 
-       tool.runMigrations();
-       //tool.rollbackMigrationToVersion("");
-       // MigrationStatus.info();
+       //tool.runMigrations();
+       tool.rollbackMigrationCount(1);
+        status.info();
     }
 }
