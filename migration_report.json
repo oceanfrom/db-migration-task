@@ -1,0 +1,25 @@
+[ {
+  "migrationName" : "0001-init.sql",
+  "success" : true,
+  "message" : "Already applied"
+}, {
+  "migrationName" : "0002-insert.sql",
+  "success" : true,
+  "message" : "Already applied"
+}, {
+  "migrationName" : "0003-test-rollback.sql",
+  "success" : true,
+  "message" : "Already applied"
+}, {
+  "migrationName" : "0004-test-init.sql",
+  "success" : true,
+  "message" : "Already applied"
+}, {
+  "migrationName" : "0005-test3.sql",
+  "success" : true,
+  "message" : "Already applied"
+}, {
+  "migrationName" : "0006-test4.sql",
+  "success" : true,
+  "message" : "Already applied"
+} ]

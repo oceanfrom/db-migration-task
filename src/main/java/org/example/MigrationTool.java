@@ -3,6 +3,7 @@ package org.example;
 import lombok.RequiredArgsConstructor;
 import org.example.logger.MigrationLogger;
 import org.example.manager.*;
+import org.example.report.MigrationReport;
 import org.example.service.MigrationRollbackService;
 import org.example.service.MigrationService;
 import org.example.utils.ConnectionUtils;
@@ -38,13 +39,14 @@ public class MigrationTool {
         MigrationLockManager migrationLockManager = new MigrationLockManager(connectionUtils);
         MigrationManager migrationManager = new MigrationManager(migrationTableManager, appliedMigrationManager, migrationHistoryManager, migrationLockManager);
         MigrationLogger migrationLogger = new MigrationLogger();
-        MigrationService migrationService = new MigrationService(migrationManager, connectionUtils);
+        MigrationReport migrationReport = new MigrationReport();
+        MigrationService migrationService = new MigrationService(migrationManager, connectionUtils, migrationReport);
         MigrationRollbackService migrationRollbackService1 = new MigrationRollbackService(connectionUtils, migrationLogger, appliedMigrationManager, migrationLockManager);
         MigrationTool tool = new MigrationTool(migrationService, migrationRollbackService1);
         MigrationStatus status = new MigrationStatus(migrationLockManager);
 
-       //tool.runMigrations();
-       tool.rollbackMigrationCount(1);
+       tool.runMigrations();
+         //tool.rollbackMigrationCount(1);
         status.info();
     }
 }

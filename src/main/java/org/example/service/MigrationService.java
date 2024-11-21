@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.example.executor.MigrationExecutor;
 import org.example.logger.MigrationLogger;
 import org.example.manager.MigrationManager;
+import org.example.report.MigrationReport;
 import org.example.utils.ConnectionUtils;
 import org.example.utils.MigrationFileReader;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 public class MigrationService {
     private final MigrationManager migrationManager;
     private final ConnectionUtils connectionUtils;
+    private final MigrationReport migrationReport;
 
     public void runMigrations(){
         migrationManager.createTablesIfNotExist();
@@ -37,17 +40,20 @@ public class MigrationService {
                 try{
                     if(migrationManager.isMigrationApplied(file)){
                         MigrationLogger.logInfo("Migration has been already applied" + migrationName);
+                        migrationReport.addMigrationResult(migrationName, true, "Already applied");
                         migrationManager.logMigrationHistory(migrationName, "SUCCESSS", null);
                     } else {
                         MigrationLogger.logMigrationStart(migrationName);
                         MigrationExecutor.executeMigration(file, connection);
                         successfullyAppliedMigrations.add(file);
+                        migrationReport.addMigrationResult(migrationName, true, "Already applied");
                         migrationManager.logMigrationHistory(migrationName, "SUCCESSS", null);
                         MigrationLogger.logInfo("Migration applied" + migrationName);
                     }
                 } catch (Exception e) {
                     hasErrors = true;
                     MigrationLogger.logMigrationError(migrationName, e);
+                    migrationReport.addMigrationResult(migrationName, false, "Error: " + e.getMessage());
                     migrationManager.logMigrationHistory(migrationName, "FAILED", e.getMessage());
                     MigrationLogger.logError("Error during migration" + migrationName + ": " + e.getMessage(), e);
                     connection.rollback();
@@ -68,6 +74,11 @@ public class MigrationService {
             MigrationLogger.logError("Error when performing migrations", e);
         } finally {
             migrationManager.releaseLock();
+            try {
+                migrationReport.generateJSONReport("migration_report.json");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
