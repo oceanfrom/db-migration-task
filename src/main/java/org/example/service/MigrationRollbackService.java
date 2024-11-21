@@ -167,4 +167,3 @@ public class MigrationRollbackService {
         return migrations;
     }
 }
-
