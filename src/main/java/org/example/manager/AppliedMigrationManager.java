@@ -44,4 +44,29 @@ public class AppliedMigrationManager {
         }
     }
 
+    public void markMigrationAsRolledBack(String migrationName) {
+        String updateQuery = "UPDATE applied_migrations SET rollbacked_on = CURRENT_TIMESTAMP WHERE migration_name = ?";
+        try (Connection connection = connectionUtils.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
+            stmt.setString(1, migrationName);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при пометке миграции как откатной", e);
+        }
+    }
+
+    public boolean isMigrationRolledBack(String migrationName) {
+        String checkQuery =
+                "SELECT COUNT(*) FROM applied_migrations " +
+                        "WHERE migration_name = ? AND rollbacked_on IS NOT NULL";
+        try (Connection connection = connectionUtils.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(checkQuery)) {
+            stmt.setString(1, migrationName);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            return resultSet.getInt(1) > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking if migration is rolled back", e);
+        }
+    }
 }
