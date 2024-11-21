@@ -1,18 +1,17 @@
 package org.example;
 
 import lombok.RequiredArgsConstructor;
-import org.example.logger.MigrationLogger;
-import org.example.manager.*;
-import org.example.report.MigrationReport;
+import org.example.dependencies.DependencyFactory;
 import org.example.service.MigrationRollbackService;
 import org.example.service.MigrationService;
-import org.example.utils.ConnectionUtils;
 import org.example.utils.MigrationStatus;
+
 
 @RequiredArgsConstructor
 public class MigrationTool {
     private final MigrationService migrationService;
     private final MigrationRollbackService migrationRollbackService;
+    private final MigrationStatus migrationStatus;
 
     public void runMigrations() {
         migrationService.runMigrations();
@@ -30,23 +29,16 @@ public class MigrationTool {
         migrationRollbackService.rollbackMigrationByDate(migrationTime);
     }
 
-
     public static void main(String[] args) {
-        ConnectionUtils connectionUtils = new ConnectionUtils();
-        AppliedMigrationManager appliedMigrationManager = new AppliedMigrationManager(connectionUtils);
-        MigrationHistoryManager migrationHistoryManager = new MigrationHistoryManager(connectionUtils);
-        MigrationTableManager migrationTableManager = new MigrationTableManager(connectionUtils);
-        MigrationLockManager migrationLockManager = new MigrationLockManager(connectionUtils);
-        MigrationManager migrationManager = new MigrationManager(migrationTableManager, appliedMigrationManager, migrationHistoryManager, migrationLockManager);
-        MigrationLogger migrationLogger = new MigrationLogger();
-        MigrationReport migrationReport = new MigrationReport();
-        MigrationService migrationService = new MigrationService(migrationManager, connectionUtils, migrationReport);
-        MigrationRollbackService migrationRollbackService1 = new MigrationRollbackService(connectionUtils, migrationLogger, appliedMigrationManager, migrationLockManager);
-        MigrationTool tool = new MigrationTool(migrationService, migrationRollbackService1);
-        MigrationStatus status = new MigrationStatus(migrationLockManager);
+        MigrationTool tool = new MigrationTool(
+                DependencyFactory.getMigrationService(),
+                DependencyFactory.getMigrationRollbackService(),
+                DependencyFactory.getMigrationStatus()
+        );
 
-       tool.runMigrations();
-         //tool.rollbackMigrationCount(1);
-        status.info();
+        tool.runMigrations();
+        tool.rollbackMigrationToVersion("0002-insert.sql");
+        tool.migrationStatus.info();
+
     }
 }

@@ -1,10 +1,9 @@
 package org.example;
 
+import org.example.dependencies.DependencyFactory;
 import org.example.logger.MigrationLogger;
-import org.example.manager.*;
 import org.example.service.MigrationRollbackService;
 import org.example.service.MigrationService;
-import org.example.utils.ConnectionUtils;
 import org.example.utils.MigrationStatus;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -45,48 +44,42 @@ public class MigrationToolCLI implements Runnable {
         switch (command) {
             case "migrate":
                 migrationService.runMigrations();
-                System.out.println("All migrations applied successfully.");
+                MigrationLogger.logInfo("All migrations applied successfully.");
                 break;
 
             case "rollback":
                 if (migrationName != null) {
                     migrationRollbackService.rollbackMigrationToVersion(migrationName);
-                    System.out.println("Rollback to migration " + migrationName + " completed.");
+                    MigrationLogger.logInfo("Rollback to version " + migrationName + " completed.");
                 } else if (count != null) {
                     migrationRollbackService.rollbackMigrationCount(count);
-                    System.out.println("Rollback of " + count + " migrations completed.");
+                    MigrationLogger.logInfo("Rollback of " + count + " migrations completed.");
                 } else if (rollbackDate != null) {
                     migrationRollbackService.rollbackMigrationByDate(rollbackDate);
-                    System.out.println("Rollback completed by date " + rollbackDate);
+                    MigrationLogger.logInfo("Rollback completed by date " + rollbackDate);
                 } else {
-                    System.err.println("Error: You must provide either --migration, --count, or --date for rollback.");
+                    MigrationLogger.logInfo("Error: You must provide either --migration, --count, or --date for rollback.");
                 }
                 break;
 
             case "status":
-                System.out.println("Current migration status:");
+                MigrationLogger.logInfo("Current migration status:");
                 migrationStatus.info();
                 break;
 
             default:
-                System.err.println("Unknown command: " + command);
+                MigrationLogger.logInfo("Unknown command: " + command);
                 break;
         }
     }
 
     public static void main(String[] args) {
-        ConnectionUtils connectionUtils = new ConnectionUtils();
-        AppliedMigrationManager appliedMigrationManager = new AppliedMigrationManager(connectionUtils);
-        MigrationHistoryManager migrationHistoryManager = new MigrationHistoryManager(connectionUtils);
-        MigrationTableManager migrationTableManager = new MigrationTableManager(connectionUtils);
-        MigrationLockManager migrationLockManager = new MigrationLockManager(connectionUtils);
-        MigrationManager migrationManager = new MigrationManager(migrationTableManager, appliedMigrationManager, migrationHistoryManager, migrationLockManager);
-        MigrationLogger migrationLogger = new MigrationLogger();
-        MigrationService migrationService = new MigrationService(migrationManager, connectionUtils);
-        MigrationRollbackService migrationRollbackService1 = new MigrationRollbackService(connectionUtils, migrationLogger, appliedMigrationManager, migrationLockManager);
-        MigrationStatus migrationStatus = new MigrationStatus(migrationLockManager);
+        MigrationService migrationService = DependencyFactory.getMigrationService();
+        MigrationRollbackService migrationRollbackService = DependencyFactory.getMigrationRollbackService();
+        MigrationStatus migrationStatus = DependencyFactory.getMigrationStatus();
 
-        int exitCode = new CommandLine(new MigrationToolCLI(migrationService, migrationRollbackService1, migrationStatus)).execute(args);
+
+        int exitCode = new CommandLine(new MigrationToolCLI(migrationService, migrationRollbackService, migrationStatus)).execute(args);
         System.exit(exitCode);
     }
 }
