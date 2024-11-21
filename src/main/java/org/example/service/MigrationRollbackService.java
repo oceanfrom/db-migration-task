@@ -68,7 +68,6 @@ public class MigrationRollbackService {
 
     public void rollbackMigrationCount(int count) {
         MigrationLogger.logInfo("Migration rollback starts");
-
         if (!migrationLockManager.acquireLock()) {
             throw new RuntimeException("Failed to acquire lock for migration rollback");
         }
