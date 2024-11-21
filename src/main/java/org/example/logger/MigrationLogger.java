@@ -10,10 +10,6 @@ public class MigrationLogger {
         logger.info("The beginning of the migration: {}", migrationName);
     }
 
-    public static void logMigrationSuccess(String migrationName) {
-        logger.info("Migration was completed successfully: {}", migrationName);
-    }
-
     public static void logMigrationError(String migrationName, Exception e) {
         logger.error("Migration execution error: {}. Details: {}", migrationName, e.getMessage(), e);
     }
