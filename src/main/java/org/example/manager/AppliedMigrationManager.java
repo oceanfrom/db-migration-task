@@ -69,4 +69,16 @@ public class AppliedMigrationManager {
             throw new RuntimeException("Error checking if migration is rolled back", e);
         }
     }
+
+    public void unmarkMigrationAsRolledBack(String migrationName) {
+        String updateQuery = "UPDATE applied_migrations SET rollbacked_on = NULL WHERE migration_name = ?";
+        try (Connection connection = connectionUtils.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(updateQuery)) {
+            stmt.setString(1, migrationName);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error when unmarking migration as rollback", e);
+        }
+    }
+
 }
