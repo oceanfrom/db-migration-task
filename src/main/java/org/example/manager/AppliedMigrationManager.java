@@ -51,7 +51,7 @@ public class AppliedMigrationManager {
             stmt.setString(1, migrationName);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Ошибка при пометке миграции как откатной", e);
+            throw new RuntimeException("Error when marking migration as rollback", e);
         }
     }
 

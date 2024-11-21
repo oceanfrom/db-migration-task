@@ -41,8 +41,8 @@ public class MigrationTool {
         MigrationRollbackService migrationRollbackService1 = new MigrationRollbackService(connectionUtils, migrationLogger, appliedMigrationManager, migrationLockManager);
         MigrationTool tool = new MigrationTool(migrationService, migrationRollbackService1);
 
-        tool.runMigrations();
-       // tool.rollbackMigrationToVersion("");
+       // tool.runMigrations();
+       tool.rollbackMigrationToVersion("");
        // MigrationStatus.info();
     }
 }
