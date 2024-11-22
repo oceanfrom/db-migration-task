@@ -7,16 +7,11 @@ import java.io.File;
 @RequiredArgsConstructor
 public class MigrationManager {
     private final MigrationTableManager migrationTableManager;
-    private final AppliedMigrationManager appliedMigrationManager;
-    private final MigrationHistoryManager migrationHistoryManager;
+    private final MigrationTrackerManager appliedMigrationManager;
     private final MigrationLockManager migrationLockManager;
 
     public void createTablesIfNotExist() {
         migrationTableManager.createTablesIfNotExist();
-    }
-
-    public void logMigrationHistory(String migrationName, String status, String errorMessage) {
-        migrationHistoryManager.logMigrationHistory(migrationName, status, errorMessage);
     }
 
     public void markMigrationAsAppleid(File migrationFile, boolean success, String message) {

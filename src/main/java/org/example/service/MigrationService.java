@@ -41,20 +41,17 @@ public class MigrationService {
                     if(migrationManager.isMigrationApplied(file)){
                         MigrationLogger.logInfo("Migration has been already applied" + migrationName);
                         migrationReport.addMigrationResult(migrationName, true, "Already applied");
-                        migrationManager.logMigrationHistory(migrationName, "SUCCESSS", null);
                     } else {
                         MigrationLogger.logMigrationStart(migrationName);
                         MigrationExecutor.executeMigration(file, connection);
                         successfullyAppliedMigrations.add(file);
                         migrationReport.addMigrationResult(migrationName, true, "Already applied");
-                        migrationManager.logMigrationHistory(migrationName, "SUCCESSS", null);
                         MigrationLogger.logInfo("Migration applied" + migrationName);
                     }
                 } catch (Exception e) {
                     hasErrors = true;
                     MigrationLogger.logMigrationError(migrationName, e);
                     migrationReport.addMigrationResult(migrationName, false, "Error: " + e.getMessage());
-                    migrationManager.logMigrationHistory(migrationName, "FAILED", e.getMessage());
                     MigrationLogger.logError("Error during migration" + migrationName + ": " + e.getMessage(), e);
                     connection.rollback();
                     successfullyAppliedMigrations.clear();

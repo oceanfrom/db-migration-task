@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @RequiredArgsConstructor
-public class AppliedMigrationManager {
+public class MigrationTrackerManager {
     private final ConnectionUtils connectionUtils;
 
     public void markMigrationAsApplied(File migrationFile, boolean success, String message) {

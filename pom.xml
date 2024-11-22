@@ -12,12 +12,6 @@
 
   <properties>
     <java.version>17</java.version>
-    <!-- Database and Liquibase properties -->
-    <datasource.url>jdbc:postgresql://localhost:5432/migration</datasource.url>
-    <datasource.username>postgres</datasource.username>
-    <datasource.password>admin</datasource.password>
-    <datasource.driver-class-name>org.postgresql.Driver</datasource.driver-class-name>
-    <liquibase.change-log>db.changelog/main-changelog.xml</liquibase.change-log>
   </properties>
 
   <dependencies>
@@ -43,6 +37,7 @@
       <artifactId>log4j-api</artifactId>
       <version>2.19.0</version>
     </dependency>
+
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
@@ -63,20 +58,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- JUnit 5 -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>5.7.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>5.7.0</version>
-      <scope>test</scope>
-    </dependency>
-
     <!-- PostgreSQL JDBC Driver -->
     <dependency>
       <groupId>org.postgresql</groupId>
@@ -84,18 +65,11 @@
       <version>42.7.4</version>
     </dependency>
 
-    <!-- Liquibase Core -->
-    <dependency>
-      <groupId>org.liquibase</groupId>
-      <artifactId>liquibase-core</artifactId>
-      <version>4.30.0</version>
-    </dependency>
-  </dependencies>
+   </dependencies>
 
   <build>
     <finalName>db-migration-tas</finalName>
     <plugins>
-      <!-- Плагин компилятора для указания версии Java -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -104,7 +78,6 @@
           <target>17</target>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -125,10 +98,6 @@
           </execution>
         </executions>
       </plugin>
-
-
     </plugins>
   </build>
-
-
 </project>
